@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Header } from "~/components/ui/Header";
 import { Button } from "~/components/ui/Button";
