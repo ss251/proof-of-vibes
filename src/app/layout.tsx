@@ -1,26 +1,28 @@
-import type { Metadata } from "next";
-
+import { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Providers } from '~/app/providers'
 import { getSession } from "~/auth"
-import "~/app/globals.css";
-import { Providers } from "~/app/providers";
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_FRAME_NAME || "Frames v2 Demo",
-  description: process.env.NEXT_PUBLIC_FRAME_DESCRIPTION || "A Farcaster Frames v2 demo app",
-};
+  title: 'Proof of Vibes',
+  description: 'First vibes to earn platform powered by the worlds best tastemakers',
+}
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {  
+}: {
+  children: React.ReactNode
+}) {
   const session = await getSession()
-
+  
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-black text-white min-h-screen`}>
         <Providers session={session}>{children}</Providers>
       </body>
     </html>
-  );
+  )
 }

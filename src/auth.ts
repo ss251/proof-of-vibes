@@ -55,6 +55,16 @@ export const authOptions: AuthOptions = {
           type: "text",
           placeholder: "0x0",
         },
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "0x0",
+        },
+        fid: {
+          label: "FID",
+          type: "text",
+          placeholder: "0",
+        },
       },
       async authorize(credentials, req) {
         const csrfToken = req?.body?.csrfToken;
@@ -63,27 +73,45 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        const appClient = createAppClient({
-          ethereum: viemConnector(),
-        });
-
-        const domain = getDomainFromUrl(process.env.NEXTAUTH_URL);
-
-        const verifyResponse = await appClient.verifySignInMessage({
-          message: credentials?.message as string,
-          signature: credentials?.signature as `0x${string}`,
-          domain,
-          nonce: csrfToken,
-        });
-        const { success, fid } = verifyResponse;
-
-        if (!success) {
-          return null;
+        // Check if FID is provided directly (from Warpcast mobile)
+        const directFid = credentials?.fid;
+        if (directFid) {
+          console.log("Using directly provided FID:", directFid);
+          return {
+            id: directFid.toString(),
+          };
         }
 
-        return {
-          id: fid.toString(),
-        };
+        try {
+          const appClient = createAppClient({
+            ethereum: viemConnector(),
+          });
+
+          const domain = getDomainFromUrl(process.env.NEXTAUTH_URL);
+          console.log(`Verifying signature for domain: ${domain}, nonce: ${csrfToken}`);
+
+          const verifyResponse = await appClient.verifySignInMessage({
+            message: credentials?.message as string,
+            signature: credentials?.signature as `0x${string}`,
+            domain,
+            nonce: csrfToken,
+          });
+          
+          console.log("Verify response:", JSON.stringify(verifyResponse));
+          const { success, fid } = verifyResponse;
+
+          if (!success) {
+            console.error("Verification failed:", verifyResponse);
+            return null;
+          }
+
+          return {
+            id: fid.toString(),
+          };
+        } catch (error) {
+          console.error("Error during Farcaster verification:", error);
+          return null;
+        }
       },
     }),
   ],

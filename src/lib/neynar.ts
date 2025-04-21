@@ -1,5 +1,18 @@
+"use server";
+
 import { NeynarAPIClient, Configuration } from '@neynar/nodejs-sdk';
 
+// Define types for client export
+export type FarcasterUserProfile = {
+  fid: number;
+  username: string;
+  displayName?: string;
+  pfp?: { url: string };
+  followerCount?: number;
+  followingCount?: number;
+};
+
+// Server-side Neynar client
 let neynarClient: NeynarAPIClient | null = null;
 
 // Example usage:
@@ -17,7 +30,7 @@ export function getNeynarClient() {
   return neynarClient;
 }
 
-type SendFrameNotificationResult =
+export type SendFrameNotificationResult =
   | {
       state: "error";
       error: unknown;
