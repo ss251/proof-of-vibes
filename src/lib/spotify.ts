@@ -17,30 +17,35 @@ function getAppropriateRedirectUri(): string {
   // Check if we're in a browser environment
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
-    const port = window.location.port ? `:${window.location.port}` : '';
-    const protocol = window.location.protocol;
+    const isWarpcast = hostname === 'warpcast.com' || 
+                       hostname.includes('frame.warpcast.com') || 
+                       window.location.href.includes('warpcast.com');
     
-    // Build potential URIs based on current hostname
-    const potentialUris = [
-      `${protocol}//${hostname}${port}/api/auth/callback/spotify`,
-      `${protocol}//${hostname}${port}/api/spotify/callback`
-    ];
+    // If we're in Warpcast, we need to use the production URL
+    if (isWarpcast) {
+      console.log("Detected Warpcast environment, using production redirect URI");
+      return 'https://proof-of-vibes.vercel.app/api/auth/callback/spotify';
+    }
     
-    // Find the first matching registered URI
-    const matchedUri = potentialUris.find(uri => 
-      REGISTERED_REDIRECT_URIS.includes(uri)
-    );
+    // For vercel deployment
+    if (hostname === 'proof-of-vibes.vercel.app') {
+      return 'https://proof-of-vibes.vercel.app/api/auth/callback/spotify';
+    }
     
-    if (matchedUri) {
-      console.log("Using detected redirect URI:", matchedUri);
-      return matchedUri;
+    // For ngrok
+    if (hostname.includes('ngrok')) {
+      return 'https://thescoho.ngrok.app/api/auth/callback/spotify';
+    }
+    
+    // For localhost
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:3000/api/auth/callback/spotify';
     }
   }
   
-  // Default to a registered URI if we couldn't determine automatically
-  // Using the first one in the list as default (presumably your production URI)
-  console.log("Using default redirect URI:", REGISTERED_REDIRECT_URIS[0]);
-  return REGISTERED_REDIRECT_URIS[0];
+  // Default to production URI if we can't determine environment
+  console.log("Using production redirect URI");
+  return 'https://proof-of-vibes.vercel.app/api/auth/callback/spotify';
 }
 
 // Types for Spotify API responses

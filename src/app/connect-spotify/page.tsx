@@ -33,6 +33,13 @@ export default function ConnectSpotify() {
     const error = searchParams.get("error");
     if (error) {
       console.error("Spotify connection error:", error);
+      if (error === "token_error") {
+        setSignInError("Failed to exchange authorization code for access token. Please try again.");
+      } else if (error === "access_denied") {
+        setSignInError("Spotify access was denied. Please allow access to connect your account.");
+      } else {
+        setSignInError(`Error connecting to Spotify: ${error}`);
+      }
     }
     
     // Check if user already has Spotify connected
@@ -56,9 +63,18 @@ export default function ConnectSpotify() {
 
   const handleConnectSpotify = async () => {
     setIsConnecting(true);
+    setSignInError(null);
     try {
       // Get the Spotify authorization URL
       const authUrl = getSpotifyAuthUrl();
+      
+      // Check if we're in Warpcast
+      const isWarpcast = typeof window !== 'undefined' && 
+                        (window.location.hostname === 'warpcast.com' || 
+                         window.location.hostname.includes('frame.warpcast.com') ||
+                         window.location.href.includes('warpcast.com'));
+      
+      console.log("Is Warpcast environment:", isWarpcast);
       
       // Important: Open in a new window instead of redirecting
       // This avoids the X-Frame-Options issue
@@ -67,8 +83,9 @@ export default function ConnectSpotify() {
       // Inform user about what's happening
       console.log("Opening Spotify auth in new window. Note: You must allow pop-ups for this site.");
       console.log("Make sure you have registered ALL possible redirect URIs in your Spotify Developer Dashboard:");
-      console.log("- https://thescoho.ngrok.app/api/auth/callback/spotify");
-      console.log("- http://localhost:3000/api/auth/callback/spotify");
+      console.log("- https://proof-of-vibes.vercel.app/api/auth/callback/spotify (Production)");
+      console.log("- https://thescoho.ngrok.app/api/auth/callback/spotify (Development)");
+      console.log("- http://localhost:3000/api/auth/callback/spotify (Local)");
       
       // Don't set isConnected here - it will be set when the user returns
       // via the callback and the status endpoint checks their cookies
