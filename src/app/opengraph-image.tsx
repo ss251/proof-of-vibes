@@ -10,8 +10,8 @@ export const contentType = "image/png";
 
 // dynamically generated OG image for frame preview
 export default async function Image() {
-  // Use a relative path directly - this works with Next.js Image Response
-  const svgPath = '/opengraph.svg';
+  // Use the direct URL to the SVG file
+  const svgUrl = "https://www.proofofvibes.com/proofofvibesverticalwhite.svg";
   
   return new ImageResponse(
     (
@@ -25,7 +25,7 @@ export default async function Image() {
           alignItems: 'center',
         }}
       >
-        <img src={svgPath} alt={alt} width={900} />
+        <img src={svgUrl} alt={alt} width={900} />
       </div>
     ),
     {
