@@ -25,7 +25,6 @@ type FollowerResponse = {
 
 export default function FarcasterFeed() {
   const { data: session, status } = useSession();
-  const [users, setUsers] = useState<User[]>([]);
   const [followers, setFollowers] = useState<User[]>([]);
   const [following, setFollowing] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,7 +61,6 @@ export default function FarcasterFeed() {
       
       const data = await response.json();
       if (data?.users && Array.isArray(data.users)) {
-        setUsers(data.users);
       }
     } catch (err) {
       console.error("Error fetching users:", err);

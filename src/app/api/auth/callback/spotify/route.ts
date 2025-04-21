@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSpotifyToken } from "~/lib/spotify";
-import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const error = url.searchParams.get("error");
-  const state = url.searchParams.get("state");
 
   // If the user denied access or an error occurred
   if (error || !code) {
