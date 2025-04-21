@@ -10,8 +10,8 @@ export const contentType = "image/png";
 
 // dynamically generated OG image for frame preview
 export default async function Image() {
-  // Use the absolute URL to your public SVG file
-  const svgUrl = new URL('/opengraph.svg', process.env.NEXT_PUBLIC_URL).href;
+  // Use a relative path directly - this works with Next.js Image Response
+  const svgPath = '/opengraph.svg';
   
   return new ImageResponse(
     (
@@ -25,7 +25,7 @@ export default async function Image() {
           alignItems: 'center',
         }}
       >
-        <img src={svgUrl} alt={alt} width={900} />
+        <img src={svgPath} alt={alt} width={900} />
       </div>
     ),
     {
