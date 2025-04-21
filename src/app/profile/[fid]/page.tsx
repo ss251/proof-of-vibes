@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Header } from "~/components/ui/Header";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button";
-import { Clock, ExternalLink, Music, User2 } from "lucide-react";
+import { ExternalLink, Music, User2 } from "lucide-react";
 
 // Keep mock data for tracks since we don't have real Spotify data
 // You can remove some of the mock user data that will be replaced with real data

@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Header } from "~/components/ui/Header";
 import { Button } from "~/components/ui/Button";
-import { ArrowRight, Check, Music, SparklesIcon } from "lucide-react";
+import { ArrowRight, Check, Music } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { getSpotifyAuthUrl } from "~/lib/spotify";
@@ -284,7 +284,7 @@ export default function ConnectSpotify() {
                   <div className="w-6 h-6 rounded-full bg-[#B69BC7]/30 flex items-center justify-center mr-2">
                     <span className="text-xs text-[#B69BC7]">✨</span>
                   </div>
-                  <h3 className="text-sm font-medium">What you'll get</h3>
+                  <h3 className="text-sm font-medium">What you&apos;ll get</h3>
                 </div>
                 <ul className="space-y-2 text-sm text-gray-300">
                   <li className="flex items-start">
