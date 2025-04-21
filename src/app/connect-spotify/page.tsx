@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Header } from "~/components/ui/Header";
 import { Button } from "~/components/ui/Button";
@@ -21,11 +22,14 @@ const SignInButton = dynamic(() => import("~/components/SignInWithFarcaster"), {
 });
 
 export default function ConnectSpotify() {
+  const { data: session, status } = useSession();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [spotifyProfile, setSpotifyProfile] = useState<{ name: string; id: string; imageUrl: string | null } | null>(null);
   const searchParams = useSearchParams();
   const [signInError, setSignInError] = useState<string | null>(null);
+
+  console.log("Session:", session);
   
   useEffect(() => {
     // Check for error parameter in URL
