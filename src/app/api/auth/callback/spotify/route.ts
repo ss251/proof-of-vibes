@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSpotifyToken } from "~/lib/spotify";
 
-// Mini-app URL in Warpcast
-const WARPCAST_MINIAPP_URL = "https://warpcast.com/~/developers/mini-apps/preview?url=https://proof-of-vibes.vercel.app";
+// Mini-app URL in Warpcast - using the proper format for mobile
+const WARPCAST_MINIAPP_URL = "https://warpcast.com/~/mini-apps/launch?domain=proof-of-vibes.vercel.app";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     const tokenResponse = await getSpotifyToken(code, state || undefined);
     
     // Determine where to redirect after successful authentication
-    let successRedirectUrl = "/profile";
+    let successRedirectUrl = WARPCAST_MINIAPP_URL;
     
     // If came from Warpcast, redirect back to the mini-app
     if (isFromWarpcast) {

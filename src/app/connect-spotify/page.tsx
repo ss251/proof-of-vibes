@@ -75,27 +75,13 @@ export default function ConnectSpotify() {
                          window.location.href.includes('warpcast.com'));
       
       console.log("Is Warpcast environment:", isWarpcast);
+      console.log("Redirecting directly to Spotify auth. Will return to app after authorization.");
       
-      // Important: Open in a new window instead of redirecting
-      // This avoids the X-Frame-Options issue
-      const spotifyWindow = window.open(authUrl, '_blank', 'width=600,height=700');
+      // For mobile and Warpcast, directly redirect instead of using popups
+      window.location.href = authUrl;
       
-      // Inform user about what's happening
-      console.log("Opening Spotify auth in new window. Note: You must allow pop-ups for this site.");
-      console.log("Make sure you have registered the production redirect URI in your Spotify Developer Dashboard:");
-      console.log("- https://proof-of-vibes.vercel.app/api/auth/callback/spotify (Production)");
-      if (window.location.hostname === 'localhost') {
-        console.log("- http://localhost:3000/api/auth/callback/spotify (Only needed for local development)");
-      }
+      // Note: We'll return to the app via the redirect URI after auth is complete
       
-      // Don't set isConnected here - it will be set when the user returns
-      // via the callback and the status endpoint checks their cookies
-      
-      // Check if popup was blocked
-      if (!spotifyWindow || spotifyWindow.closed || typeof spotifyWindow.closed === 'undefined') {
-        setSignInError("Pop-up was blocked. Please allow pop-ups for this site and try again.");
-        setIsConnecting(false);
-      }
     } catch (error) {
       console.error("Error connecting to Spotify:", error);
       setIsConnecting(false);
