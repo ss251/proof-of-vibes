@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { getSpotifyToken } from "~/lib/spotify";
 import { cookies } from "next/headers";
 
+// Mini-app URL in Warpcast
+const WARPCAST_MINIAPP_URL = "https://warpcast.com/~/developers/mini-apps/preview?url=https://proof-of-vibes.vercel.app";
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -13,22 +16,22 @@ export async function GET(request: Request) {
   // If the user denied access or an error occurred
   if (error || !code) {
     const errorRedirectUrl = isFromWarpcast
-      ? "https://warpcast.com/~/developers/mini-apps/preview?url=https://proof-of-vibes.vercel.app"
+      ? WARPCAST_MINIAPP_URL
       : "/connect-spotify?error=access_denied";
     
     return NextResponse.redirect(new URL(errorRedirectUrl, request.url));
   }
 
   try {
-    // Exchange code for token
-    const tokenResponse = await getSpotifyToken(code);
+    // Exchange code for token using the state parameter to ensure correct redirect URI
+    const tokenResponse = await getSpotifyToken(code, state || undefined);
     
     // Determine where to redirect after successful authentication
     let successRedirectUrl = "/profile";
     
     // If came from Warpcast, redirect back to the mini-app
     if (isFromWarpcast) {
-      successRedirectUrl = "https://warpcast.com/~/developers/mini-apps/preview?url=https://proof-of-vibes.vercel.app/api/auth/callback/spotify";
+      successRedirectUrl = WARPCAST_MINIAPP_URL;
       console.log("Redirecting back to Warpcast mini-app");
     }
 
@@ -40,7 +43,7 @@ export async function GET(request: Request) {
       maxAge: tokenResponse.expires_in,
       path: "/",
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "lax",
     });
     
@@ -49,7 +52,7 @@ export async function GET(request: Request) {
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: "/",
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "lax",
     });
 
@@ -60,7 +63,7 @@ export async function GET(request: Request) {
     
     // Handle errors differently based on where the request came from
     const errorRedirectUrl = isFromWarpcast
-      ? "https://warpcast.com/~/developers/mini-apps/preview?url=https://proof-of-vibes.vercel.app?error=token_error"
+      ? `${WARPCAST_MINIAPP_URL}?error=token_error`
       : "/connect-spotify?error=token_error";
       
     return NextResponse.redirect(new URL(errorRedirectUrl, request.url));

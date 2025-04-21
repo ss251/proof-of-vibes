@@ -82,10 +82,11 @@ export default function ConnectSpotify() {
       
       // Inform user about what's happening
       console.log("Opening Spotify auth in new window. Note: You must allow pop-ups for this site.");
-      console.log("Make sure you have registered ALL possible redirect URIs in your Spotify Developer Dashboard:");
+      console.log("Make sure you have registered the production redirect URI in your Spotify Developer Dashboard:");
       console.log("- https://proof-of-vibes.vercel.app/api/auth/callback/spotify (Production)");
-      console.log("- https://thescoho.ngrok.app/api/auth/callback/spotify (Development)");
-      console.log("- http://localhost:3000/api/auth/callback/spotify (Local)");
+      if (window.location.hostname === 'localhost') {
+        console.log("- http://localhost:3000/api/auth/callback/spotify (Only needed for local development)");
+      }
       
       // Don't set isConnected here - it will be set when the user returns
       // via the callback and the status endpoint checks their cookies
