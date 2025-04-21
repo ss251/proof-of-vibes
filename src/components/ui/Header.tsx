@@ -35,14 +35,12 @@ const SignInButton = dynamic(() => import("../SignInWithFarcaster"), {
 export function Header() {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState<NeynarUser | null>(null);
-  const [loading, setLoading] = useState(false);
   
   // Fetch user data when session is available
   useEffect(() => {
     const fetchUserData = async () => {
       if (!session?.user?.fid) return;
       
-      setLoading(true);
       try {
         const response = await fetch(`/api/users?fid=${session.user.fid}`);
         
@@ -56,8 +54,6 @@ export function Header() {
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
       }
     };
     

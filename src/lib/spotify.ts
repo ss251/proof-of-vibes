@@ -183,7 +183,7 @@ export async function refreshSpotifyToken(refreshToken: string): Promise<{
 /**
  * Fetch data from Spotify Web API
  */
-export async function fetchSpotifyApi(endpoint: string, token: string, method = 'GET', body?: any) {
+export async function fetchSpotifyApi(endpoint: string, token: string, method = 'GET', body?: SpotifyRequestBody) {
   const response = await fetch(`https://api.spotify.com/v1${endpoint}`, {
     method,
     headers: {

@@ -8,7 +8,8 @@ import { ArrowRight, Check, Music } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { getSpotifyAuthUrl } from "~/lib/spotify";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 // Dynamically import signin component to avoid SSR issues
 const SignInButton = dynamic(() => import("~/components/SignInWithFarcaster"), {
@@ -24,7 +25,6 @@ export default function ConnectSpotify() {
   const { data: session, status } = useSession();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [signInError, setSignInError] = useState<string | null>(null);
   
@@ -131,9 +131,12 @@ export default function ConnectSpotify() {
             <div className="flex items-center p-4 border border-gray-800 rounded-lg">
               <div className="flex-shrink-0 mr-4">
                 <div className="h-10 w-10 rounded-full bg-[#1DB954] flex items-center justify-center">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0C5.4 0 0 5.4 0 12C0 18.6 5.4 24 12 24C18.6 24 24 18.6 24 12C24 5.4 18.66 0 12 0ZM17.521 17.34C17.281 17.699 16.861 17.819 16.5 17.58C13.68 15.84 10.14 15.479 5.939 16.439C5.521 16.56 5.16 16.26 5.04 15.9C4.92 15.48 5.22 15.12 5.58 15C10.14 13.979 14.1 14.4 17.28 16.319C17.639 16.5 17.76 16.98 17.521 17.34ZM18.961 14.04C18.66 14.46 18.12 14.64 17.7 14.34C14.46 12.36 9.54 11.76 5.76 12.9C5.281 13.08 4.74 12.78 4.56 12.361C4.38 11.88 4.68 11.34 5.1 11.16C9.48 9.9 14.94 10.56 18.66 12.84C19.08 13.08 19.201 13.68 18.961 14.04ZM19.08 10.68C15.24 8.4 8.82 8.16 5.16 9.301C4.56 9.48 3.96 9.12 3.78 8.58C3.6 7.979 3.96 7.38 4.5 7.2C8.76 5.94 15.78 6.24 20.221 8.88C20.76 9.18 20.94 9.9 20.64 10.44C20.34 10.92 19.62 11.1 19.08 10.68Z" fill="white" />
-                  </svg>
+                  <Image 
+                    width={24} 
+                    height={24} 
+                    src="/spotify-icon.svg" 
+                    alt="Spotify"
+                  />
                 </div>
               </div>
               <div className="flex-1">
