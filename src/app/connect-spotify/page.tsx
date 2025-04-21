@@ -22,7 +22,6 @@ const SignInButton = dynamic(() => import("~/components/SignInWithFarcaster"), {
 });
 
 export default function ConnectSpotify() {
-  const { data: session, status } = useSession();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [spotifyProfile, setSpotifyProfile] = useState<{ name: string; id: string; imageUrl: string | null } | null>(null);
