@@ -18,7 +18,7 @@ let neynarClient: NeynarAPIClient | null = null;
 // Example usage:
 // const client = getNeynarClient();
 // const user = await client.lookupUserByFid(fid); 
-export function getNeynarClient() {
+export async function getNeynarClient() {
   if (!neynarClient) {
     const apiKey = process.env.NEYNAR_API_KEY;
     if (!apiKey) {
@@ -49,7 +49,7 @@ export async function sendNeynarFrameNotification({
   body: string;
 }): Promise<SendFrameNotificationResult> {
   try {
-    const client = getNeynarClient();
+    const client = await getNeynarClient();
     const targetFids = [fid];
     const notification = {
       title,
