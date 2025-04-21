@@ -25,6 +25,7 @@ export default function ConnectSpotify() {
   const { data: session, status } = useSession();
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [spotifyProfile, setSpotifyProfile] = useState<{ name: string; id: string; imageUrl: string | null } | null>(null);
   const searchParams = useSearchParams();
   const [signInError, setSignInError] = useState<string | null>(null);
   
@@ -44,12 +45,18 @@ export default function ConnectSpotify() {
     
     // Check if user already has Spotify connected
     const checkSpotifyConnection = async () => {
-      // We can't directly access httpOnly cookies, so we'll make a small request to check
       try {
         const response = await fetch('/api/spotify/status');
         const data = await response.json();
+        
         if (data.connected) {
           setIsConnected(true);
+          // If profile info is available, store it
+          if (data.profile) {
+            setSpotifyProfile(data.profile);
+          }
+        } else if (data.message) {
+          console.log("Spotify connection status:", data.message);
         }
       } catch (error) {
         console.error("Error checking Spotify connection:", error);
@@ -147,19 +154,29 @@ export default function ConnectSpotify() {
             <div className="flex items-center p-4 border border-gray-800 rounded-lg">
               <div className="flex-shrink-0 mr-4">
                 <div className="h-10 w-10 rounded-full bg-[#1DB954] flex items-center justify-center">
-                  <Image 
-                    width={24} 
-                    height={24} 
-                    src="/spotify-icon.svg" 
-                    alt="Spotify"
-                  />
+                  {spotifyProfile?.imageUrl ? (
+                    <Image 
+                      width={40} 
+                      height={40} 
+                      src={spotifyProfile.imageUrl}
+                      alt="Spotify Profile"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <Image 
+                      width={24} 
+                      height={24} 
+                      src="/spotify-icon.svg" 
+                      alt="Spotify"
+                    />
+                  )}
                 </div>
               </div>
               <div className="flex-1">
                 <h3 className="font-medium">Spotify Account</h3>
                 <p className="text-gray-400 text-sm">
                   {isConnected 
-                    ? `Connected as User #${session?.user?.fid || 'Unknown'}` 
+                    ? `Connected as ${spotifyProfile?.name || 'Spotify User'}`
                     : 'Connect to show your top tracks'}
                 </p>
               </div>
