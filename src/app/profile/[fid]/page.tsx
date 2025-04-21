@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Header } from "~/components/ui/Header";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/Button";
-import { Clock, Music } from "lucide-react";
+import { Clock, ExternalLink, Music, User2 } from "lucide-react";
 
 // Keep mock data for tracks since we don't have real Spotify data
 // You can remove some of the mock user data that will be replaced with real data
@@ -138,12 +138,12 @@ export default function UserProfile() {
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-gradient-to-b from-black to-gray-950 text-white">
         <Header />
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 flex items-center justify-center h-[60vh]">
           <div className="text-center">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#B69BC7] border-r-transparent"></div>
-            <p className="mt-4">Loading profile...</p>
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-purple-500 border-r-transparent drop-shadow-glow"></div>
+            <p className="mt-6 text-lg font-medium text-purple-100">Loading profile...</p>
           </div>
         </div>
       </div>
@@ -152,12 +152,21 @@ export default function UserProfile() {
   
   if (error || !userData) {
     return (
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-gradient-to-b from-black to-gray-950 text-white">
         <Header />
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-          <div className="text-center py-16">
-            <h2 className="text-2xl font-bold mb-2">User not found</h2>
-            <p className="text-gray-400">{error || `The user with FID ${fid} does not exist or is not available.`}</p>
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-16">
+          <div className="bg-gray-900/60 backdrop-blur-sm rounded-xl p-8 text-center max-w-md mx-auto border border-red-900/30 shadow-lg">
+            <div className="h-20 w-20 mx-auto mb-6 rounded-full bg-red-900/20 flex items-center justify-center">
+              <User2 className="h-10 w-10 text-red-400" />
+            </div>
+            <h2 className="text-2xl font-bold mb-3">User not found</h2>
+            <p className="text-gray-400 mb-6">{error || `The user with FID ${fid} does not exist or is not available.`}</p>
+            <Button 
+              className="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900"
+              onClick={() => window.location.href = '/'}
+            >
+              Go Home
+            </Button>
           </div>
         </div>
       </div>
@@ -165,100 +174,163 @@ export default function UserProfile() {
   }
   
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Profile Info */}
-          <div className="md:col-span-1">
-            <div className="bg-gray-900 rounded-lg p-6">
-              <div className="flex flex-col items-center text-center mb-6">
-                <Avatar className="h-24 w-24 mb-4">
-                  <AvatarImage src={userData.pfp?.url} alt={userData.displayName} />
-                  <AvatarFallback>{userData.displayName?.[0] || userData.username?.[0]}</AvatarFallback>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
+        {/* Profile header - spans full width */}
+        <div className="bg-gradient-to-r from-gray-900 via-purple-950/20 to-gray-900 backdrop-blur-md rounded-2xl p-8 mb-10 shadow-xl border border-purple-900/20 transition-all duration-500 hover:shadow-purple-900/10">
+          <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+            <div className="flex-shrink-0">
+              <div className="relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-400 rounded-full blur-md opacity-70"></div>
+                <Avatar className="relative h-28 w-28 md:h-36 md:w-36 rounded-full ring-2 ring-purple-600/50">
+                  <AvatarImage src={userData.pfp?.url} alt={userData.displayName} className="object-cover" />
+                  <AvatarFallback className="bg-gradient-to-br from-purple-700 to-purple-900">
+                    <span className="text-2xl font-bold">{userData.displayName?.[0] || userData.username?.[0]}</span>
+                  </AvatarFallback>
                 </Avatar>
-                <h1 className="text-2xl font-bold">{userData.displayName}</h1>
-                <p className="text-gray-400">@{userData.username}</p>
-                <p className="text-gray-400 text-sm mt-1">FID: {userData.fid}</p>
-                <p className="mt-4 text-sm">{userData.profile?.bio?.text || ""}</p>
+              </div>
+            </div>
+            
+            <div className="flex-grow text-center md:text-left">
+              <h1 className="text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+                {userData.displayName}
+              </h1>
+              <p className="text-purple-300 text-lg mb-4">@{userData.username}</p>
+              
+              <div className="flex flex-col md:flex-row gap-6 mb-6">
+                <div className="flex items-center justify-center md:justify-start">
+                  <span className="font-bold text-xl mr-2">{userData.followerCount.toLocaleString()}</span>
+                  <span className="text-gray-400">Followers</span>
+                </div>
+                <div className="flex items-center justify-center md:justify-start">
+                  <span className="font-bold text-xl mr-2">{userData.followingCount.toLocaleString()}</span>
+                  <span className="text-gray-400">Following</span>
+                </div>
               </div>
               
-              <div className="flex justify-around text-center mb-6">
-                <div>
-                  <p className="font-bold">{userData.followerCount.toLocaleString()}</p>
-                  <p className="text-gray-400 text-sm">Followers</p>
-                </div>
-                <div>
-                  <p className="font-bold">{userData.followingCount.toLocaleString()}</p>
-                  <p className="text-gray-400 text-sm">Following</p>
-                </div>
-              </div>
+              <p className="text-gray-300 mt-2 max-w-2xl mb-6 text-lg">{userData.profile?.bio?.text || ""}</p>
               
-              {/* Only show follow button if not viewing own profile */}
               {!isOwnProfile && (
                 <Button 
-                  className={`w-full ${userData.following ? 'bg-gray-800 hover:bg-gray-700' : 'bg-[#B69BC7] hover:bg-[#a78ab6]'}`}
+                  className={`transition-all duration-300 ${
+                    userData.following 
+                      ? 'bg-gray-800 hover:bg-gray-700 border border-purple-500/30' 
+                      : 'bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 shadow-lg hover:shadow-purple-900/20'
+                  }`}
                 >
                   {userData.following ? 'Following' : 'Follow'}
                 </Button>
               )}
             </div>
           </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Music Stats - Left Column */}
+          <div className="md:col-span-1">
+            <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl p-6 shadow-xl border border-purple-900/20 transition-all duration-300 hover:shadow-purple-900/10">
+              <h2 className="text-xl font-bold mb-6 flex items-center">
+                <Music className="mr-2 h-5 w-5 text-purple-400" />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">Music Stats</span>
+              </h2>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-800/60 rounded-lg border border-purple-900/10 transition-all duration-300 hover:bg-gray-800/80 hover:border-purple-900/20">
+                  <div className="text-purple-300 text-sm mb-1">Top Genre</div>
+                  <div className="font-medium text-lg">Hip-Hop / Rap</div>
+                </div>
+                <div className="p-4 bg-gray-800/60 rounded-lg border border-purple-900/10 transition-all duration-300 hover:bg-gray-800/80 hover:border-purple-900/20">
+                  <div className="text-purple-300 text-sm mb-1">Favorite Artist</div>
+                  <div className="font-medium text-lg">A Tribe Called Quest</div>
+                </div>
+                <div className="p-4 bg-gray-800/60 rounded-lg border border-purple-900/10 transition-all duration-300 hover:bg-gray-800/80 hover:border-purple-900/20">
+                  <div className="text-purple-300 text-sm mb-1">Listening Time</div>
+                  <div className="font-medium text-lg">12.5 hours / week</div>
+                </div>
+                <div className="p-4 bg-gray-800/60 rounded-lg border border-purple-900/10 transition-all duration-300 hover:bg-gray-800/80 hover:border-purple-900/20">
+                  <div className="text-purple-300 text-sm mb-1">Mood</div>
+                  <div className="font-medium text-lg">Nostalgic</div>
+                </div>
+              </div>
+            </div>
+          </div>
           
-          {/* Top Tracks */}
+          {/* Top Tracks - Right Column */}
           <div className="md:col-span-2">
-            <div className="bg-gray-900 rounded-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold flex items-center">
-                  <Music className="mr-2 h-5 w-5" />
-                  Top Tracks
-                </h2>
-                
-                <div className="flex space-x-2">
-                  <Button
-                    onClick={() => setTimeFrame("week")}
-                    variant={timeFrame === "week" ? "default" : "outline"}
-                    className={timeFrame === "week" ? "bg-[#B69BC7] hover:bg-[#a78ab6]" : ""}
-                    size="sm"
-                  >
-                    Week
-                  </Button>
-                  <Button
-                    onClick={() => setTimeFrame("month")}
-                    variant={timeFrame === "month" ? "default" : "outline"}
-                    className={timeFrame === "month" ? "bg-[#B69BC7] hover:bg-[#a78ab6]" : ""}
-                    size="sm"
-                  >
-                    Month
-                  </Button>
-                  <Button
-                    onClick={() => setTimeFrame("year")}
-                    variant={timeFrame === "year" ? "default" : "outline"}
-                    className={timeFrame === "year" ? "bg-[#B69BC7] hover:bg-[#a78ab6]" : ""}
-                    size="sm"
-                  >
-                    Year
-                  </Button>
+            <div className="bg-[#121212] rounded-xl overflow-hidden">
+              {/* Header */}
+              <div className="px-5 pt-5 pb-4 flex items-center">
+                <div className="flex items-center">
+                  <Music className="h-5 w-5 text-purple-400 mr-3" />
+                  <h2 className="text-2xl font-bold text-white">Top Tracks</h2>
                 </div>
               </div>
               
-              <div className="space-y-4">
+              {/* Tabs */}
+              <div className="px-5 pb-4 flex gap-2">
+                <button 
+                  onClick={() => setTimeFrame("week")}
+                  className={`px-5 py-2 rounded-full text-sm font-medium ${
+                    timeFrame === "week" ? "bg-purple-600 text-white" : "bg-[#2a2a2a] text-gray-300 hover:bg-[#333333]"
+                  }`}
+                >
+                  Week
+                </button>
+                <button 
+                  onClick={() => setTimeFrame("month")}
+                  className={`px-5 py-2 rounded-full text-sm font-medium ${
+                    timeFrame === "month" ? "bg-purple-600 text-white" : "bg-[#2a2a2a] text-gray-300 hover:bg-[#333333]"
+                  }`}
+                >
+                  Month
+                </button>
+                <button 
+                  onClick={() => setTimeFrame("year")}
+                  className={`px-5 py-2 rounded-full text-sm font-medium ${
+                    timeFrame === "year" ? "bg-purple-600 text-white" : "bg-[#2a2a2a] text-gray-300 hover:bg-[#333333]"
+                  }`}
+                >
+                  Year
+                </button>
+              </div>
+              
+              {/* Track List */}
+              <div className="px-2">
                 {mockTracks[timeFrame].map((track: Track, index: number) => (
-                  <div key={index} className="flex items-center p-3 bg-gray-800 rounded-lg">
-                    <div className="flex-shrink-0 mr-4 text-lg font-bold text-gray-400 w-6 text-center">
-                      {index + 1}
+                  <div 
+                    key={index} 
+                    className="flex items-center px-3 py-2.5 hover:bg-white/5 rounded-lg group mx-2 cursor-pointer"
+                  >
+                    {/* Track Number */}
+                    <div className="w-8 text-center">
+                      <span className={`text-xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-purple-400 to-purple-600`}>
+                        {index + 1}
+                      </span>
                     </div>
-                    <div className="flex-shrink-0 mr-4">
-                      <img src={track.albumArt} alt={track.album} className="h-16 w-16 rounded-md" />
+                    
+                    {/* Album Art */}
+                    <div className="w-12 h-12 ml-1 mr-3 rounded overflow-hidden shadow flex-shrink-0">
+                      <img src={track.albumArt} alt={track.album} className="w-full h-full object-cover" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium">{track.name}</p>
-                      <p className="text-gray-400 text-sm">{track.artist}</p>
-                      <p className="text-gray-500 text-xs">{track.album}</p>
+                    
+                    {/* Track Info */}
+                    <div className="flex-grow min-w-0 mr-2">
+                      <p className="text-white text-sm font-medium truncate">{track.name}</p>
+                      <p className="text-gray-400 text-xs truncate">{track.artist}</p>
                     </div>
-                    <div className="flex-shrink-0 flex items-center text-gray-400 text-xs">
-                      <Clock className="h-3 w-3 mr-1" />
-                      <span>This {timeFrame}</span>
+                    
+                    {/* Time Indicator */}
+                    <div className="ml-auto flex items-center">
+                      {/* Play Button (shows on hover) */}
+                      <a 
+                        href={`https://open.spotify.com/search/${encodeURIComponent(track.name + ' ' + track.artist)}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
                     </div>
                   </div>
                 ))}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "./ui/Button";
+import Link from "next/link";
 
 type User = {
   fid: number;
@@ -222,7 +223,11 @@ export default function FarcasterFeed() {
             <h3 className="text-xl font-semibold mb-2">Followers ({followers.length})</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {followers.map((follower) => (
-                <div key={follower.fid} className="border rounded-lg p-3 flex items-center">
+                <Link 
+                  href={`/profile/${follower.fid}`} 
+                  key={`follower-${follower.fid}`} 
+                  className="border rounded-lg p-3 flex items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                >
                   {follower.pfp_url ? (
                     <img
                       src={follower.pfp_url}
@@ -236,7 +241,7 @@ export default function FarcasterFeed() {
                     <div className="font-medium">{follower.display_name || follower.username}</div>
                     <div className="text-gray-500 text-sm">@{follower.username}</div>
                   </div>
-                </div>
+                </Link>
               ))}
               {followers.length === 0 && <div>No followers found</div>}
             </div>
@@ -257,7 +262,11 @@ export default function FarcasterFeed() {
             <h3 className="text-xl font-semibold mb-2">Following ({following.length})</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {following.map((follow) => (
-                <div key={follow.fid} className="border rounded-lg p-3 flex items-center">
+                <Link 
+                  href={`/profile/${follow.fid}`} 
+                  key={`following-${follow.fid}`} 
+                  className="border rounded-lg p-3 flex items-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+                >
                   {follow.pfp_url ? (
                     <img
                       src={follow.pfp_url}
@@ -271,7 +280,7 @@ export default function FarcasterFeed() {
                     <div className="font-medium">{follow.display_name || follow.username}</div>
                     <div className="text-gray-500 text-sm">@{follow.username}</div>
                   </div>
-                </div>
+                </Link>
               ))}
               {following.length === 0 && <div>Not following anyone</div>}
             </div>
