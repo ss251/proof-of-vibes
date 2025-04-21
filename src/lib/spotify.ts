@@ -8,7 +8,8 @@ const REGISTERED_REDIRECT_URIS = [
   'https://thescoho.ngrok.app/api/auth/callback/spotify',
   'http://localhost:3000/api/auth/callback/spotify',
   'https://thescoho.ngrok.app/api/spotify/callback', // Add alternate paths if registered
-  'http://localhost:3000/api/spotify/callback'
+  'http://localhost:3000/api/spotify/callback',
+  'https://proof-of-vibes.vercel.app/api/auth/callback/spotify',
 ];
 
 // Determine the appropriate redirect URI based on current environment
