@@ -8,13 +8,7 @@ const PRODUCTION_REDIRECT_URI = 'https://proof-of-vibes.vercel.app/api/auth/call
 const LOCAL_REDIRECT_URI = 'http://localhost:3000/api/auth/callback/spotify';
 
 // Map of registered Spotify redirect URIs - add all URIs that you've registered in Spotify Dashboard
-const REGISTERED_REDIRECT_URIS = [
-  'https://thescoho.ngrok.app/api/auth/callback/spotify',
-  'http://localhost:3000/api/auth/callback/spotify',
-  'https://thescoho.ngrok.app/api/spotify/callback', // Add alternate paths if registered
-  'http://localhost:3000/api/spotify/callback',
-  'https://proof-of-vibes.vercel.app/api/auth/callback/spotify',
-];
+
 
 // Determine the appropriate redirect URI based on current environment
 function getAppropriateRedirectUri(): string {

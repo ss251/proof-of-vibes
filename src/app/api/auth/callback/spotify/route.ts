@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getSpotifyToken } from "~/lib/spotify";
-import { cookies } from "next/headers";
 
 // Mini-app URL in Warpcast
 const WARPCAST_MINIAPP_URL = "https://warpcast.com/~/developers/mini-apps/preview?url=https://proof-of-vibes.vercel.app";
